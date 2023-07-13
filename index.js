@@ -4,7 +4,7 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const bodyparser = require('body-parser');
 const SchemaTypes = mongoose.Types.ObjectId;
-const main = require('./helper/email');
+// const main = require('./helper/email');
 
 app.use(cors());
 app.use(bodyparser.json())
