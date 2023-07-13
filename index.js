@@ -63,9 +63,8 @@ app.post("/generateTicket", async (req, res) => {
 
 app.get('/getAllTicketsOfClient/:employeeId', async (req, res) => {
     try {
-        const clientTickets = new TicketModal();
         const employeeId = req.params.employeeId;
-        const tickets = await clientTickets.findMany({employeeId});
+        const tickets = await TicketModal.findMany({employeeId});
         await main();
         res.status(200).json({message: "OK", tickets});
     } catch(err) {
