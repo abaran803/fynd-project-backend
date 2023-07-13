@@ -4,7 +4,7 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const bodyparser = require('body-parser');
 const SchemaTypes = mongoose.Types.ObjectId;
-// const main = require('./helper/email');
+const main = require('./helper/email');
 
 app.use(cors());
 app.use(bodyparser.json())
@@ -30,7 +30,7 @@ const ticketSchema = new mongoose.Schema({
     },
     ticketId: {
         type: String,
-        default: SchemaTypes.ObjectId
+        default: mongoose.Types.ObjectId()
     },
     ticketStatus: {
         type: String,
@@ -54,7 +54,8 @@ const PORT = 3001;
 app.post("/generateTicket", async (req, res) => {
     try {
         const ticket = new TicketModal(req.body);
-        await ticket.save();
+        const response = await ticket.save();
+        await main(response);
         res.status(200).json({message: "OK"});
     } catch(err) {
         res.status(500).json({message: "Some error occured"});
@@ -72,15 +73,15 @@ app.get('/getAllTicketsOfClient/:employeeId', async (req, res) => {
     }
 })
 
-// app.get("/sendMail/:body", async (req, res) => {
-//     try {
-//         console.log("Sending");
-//         await main();
-//         res.status(200).send("Email sent successfully");
-//     } catch(err) {
-//         res.status(404).send(err.message);
-//     }
-// })
+app.get("/sendMail/:body", async (req, res) => {
+    try {
+        console.log("Sending");
+        await main();
+        res.status(200).send("Email sent successfully");
+    } catch(err) {
+        res.status(404).send(err.message);
+    }
+})
 
 app.listen(PORT, () => {
     console.log("Server started at port", PORT);

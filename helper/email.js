@@ -1,25 +1,87 @@
-const SMTPClient = require('emailjs');
+const nodemailer = require("nodemailer");
 
-  async function main() {
-    const client = new SMTPClient({
-        user: 'Ayush',
-        password: 'my fan was',
-        host: 'abaran803@gmail.com',
-        ssl: true,
-    });
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: "abaran803@gmail.com",
+    pass: "mcekrxssgvosvrel",
+  },
+});
 
-    // send the message and get a callback with an error or details of the message that was sent
-    client.send(
-        {
-            text: 'i hope this works',
-            from: 'abaran803@gmail.com',
-            to: 'jigar@fynd.com',
-            subject: 'testing emailjs',
-        },
-        (err, message) => {
-            console.log(err || message);
-        }
-    );
+transporter.verify(function (error, success) {
+  if (error) {
+    console.log(error);
+  } else {
+    console.log("Server validation done and ready for messages.");
   }
-  
-  module.exports = main;
+});
+
+const email = (
+  employeeId,
+  manager,
+  duration,
+  type,
+  ticketId,
+  ticketStatus,
+  subject,
+  description
+) => {
+  const generatedMailBody = `<table>
+    <tr>
+        <th>Employee Id</th>
+        <td>${employeeId}</td>
+    </tr>
+    <tr>
+        <th>Manager</th>
+        <td>${manager}</td>
+    </tr>
+    <tr>
+        <th>Duration</th>
+        <td>${duration}</td>
+    </tr>
+    <tr>
+        <th>Type</th>
+        <td>${type}</td>
+    </tr>
+    <tr>
+        <th>Ticket Id</th>
+        <td>${ticketId}</td>
+    </tr>
+    <tr>
+        <th>Ticket Status</th>
+        <td>${ticketStatus}</td>
+    </tr>
+    <tr>
+        <th>Subject</th>
+        <td>${subject}</td>
+    </tr>
+    <tr>
+        <th>Description</th>
+        <td>${description}</td>
+    </tr>
+    </table>`;
+
+  return {
+    from: "abaran803@gmail.com",
+    to: "jigar@fynd.com",
+    subject: "Request for Ticket",
+    html: generatedMailBody,
+  };
+};
+
+async function main(data) {
+  return await transporter.sendMail(
+    email(
+      data.employeeId,
+      data.manager,
+      data.duration,
+      data.type,
+      data.ticketId,
+      data.ticketStatus,
+      data.subject,
+      data.description
+    )
+  );
+}
+
+module.exports = main;
