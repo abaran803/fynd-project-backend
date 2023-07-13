@@ -64,10 +64,10 @@ app.post("/generateTicket", async (req, res) => {
 app.get('/getAllTicketsOfClient/:employeeId', async (req, res) => {
     try {
         const employeeId = req.params.employeeId;
-        const tickets = await TicketModal.findMany({employeeId});
-        await main();
+        const tickets = await TicketModal.find({employeeId});
         res.status(200).json({message: "OK", tickets});
     } catch(err) {
+        console.log(err.message);
         res.status(500).send("Some error occured");
     }
 })
